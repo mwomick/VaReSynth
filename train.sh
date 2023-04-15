@@ -1,5 +1,5 @@
 #!/bin/bash
 
-pip install diffusers
-pip install transformers
+pip install diffusers["torch"]
+pip install 'transformers[torch]'
 python train.py
