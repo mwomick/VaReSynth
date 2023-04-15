@@ -118,6 +118,7 @@ class VaReSynth(nn.Module):
             ResConvBlock(c, c, 4, dropout_last=False),
         )
 
+
     @torch.no_grad()
     def get_text_embeds(self, prompt):
         # Tokenize text and get embeddings

@@ -6,9 +6,11 @@ from torch.utils import data
 from tqdm import tqdm
 
 from coco import VRSCocoCaptions
-from utils import get_alphas_sigmas, get_ddpm_schedule, device
+from utils import get_alphas_sigmas, get_ddpm_schedule
 from model import VaReSynth
-from config import BATCH_SIZE
+from config import BATCH_SIZE, DEVICE
+
+device = DEVICE
 
 def eval_loss(model, rng, reals, classes, pos):
     # Draw uniformly distributed continuous timesteps
@@ -76,6 +78,8 @@ def save(model, opt, scaler, epoch):
     torch.save(obj, filename)
 
 
+from demo import demo
+
 if __name__ == "__main__":
     # Create the model and optimizer
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -98,3 +102,5 @@ if __name__ == "__main__":
         train(model, opt, scaler, rng, epoch)
         save(model, opt, scaler, epoch)
         epoch += 1
+        if epoch % 5 == 0:
+            demo(model, epoch)

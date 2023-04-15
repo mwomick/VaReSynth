@@ -2,8 +2,6 @@ import torch
 
 # Define the noise schedule and sampling loop
 
-device = torch.cuda(0)
-
 def get_alphas_sigmas(log_snrs):
     """Returns the scaling factors for the clean image (alpha) and for the
     noise (sigma), given the log SNR for a timestep."""

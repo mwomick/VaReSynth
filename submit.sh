@@ -28,7 +28,7 @@ SIMG_PATH=/nas/longleaf/apps/pytorch_py3/1.9.1/simg
 SIMG_NAME=pytorch1.9.1-py3-cuda11.1-ubuntu18.04.simg
 
 # Set data path
-DATA_PATH=/pine/scr/m/w/rwomick/VaReSynth/src
+DATA_PATH=/pine/scr/m/w/rwomick/VaReSynth
 
 # GPU with Singularity
-singularity exec --nv -B /pine $SIMG_PATH/$SIMG_NAME bash -c "cd $DATA_PATH; "
+singularity exec --nv -B /pine $SIMG_PATH/$SIMG_NAME bash -c "cd $DATA_PATH; ./train.sh"
