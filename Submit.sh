@@ -25,8 +25,7 @@ unset OMP_NUM_THREADS
 SIMG_PATH=/nas/longleaf/apps/pytorch_py3/1.9.1/simg 
 
 # Set SIMG name
-# SIMG_NAME=pytorch1.9.1-py3-cuda11.1-ubuntu18.04.simg
-SIMG_NAME=torch.sif
+SIMG_NAME=pytorch1.9.1-py3-cuda11.1-ubuntu18.04.simg
 
 # Set data path
 DATA_PATH=/pine/scr/m/w/rwomick/VaReSynth/src
