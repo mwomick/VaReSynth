@@ -3,3 +3,4 @@ MultiDiffusion-master/*
 *.pyc
 *.out
 __pycache__
+longleaf/*
