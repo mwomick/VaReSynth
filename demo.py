@@ -4,7 +4,7 @@ from torchvision import utils
 from torchvision.transforms import functional as TF
 
 from sample import simple_sample
-from drawbench import get_rand_drawbench_prompts
+from data.drawbench import get_rand_drawbench_prompts
 from config import DEVICE, STEPS
 
 def get_simple_pos(num):

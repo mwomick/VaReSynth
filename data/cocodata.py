@@ -34,7 +34,7 @@ class VRSCoco(VisionDataset):
         transforms: Optional[Callable] = None,
     ) -> None:
         super().__init__(root, transforms, transform, target_transform)
-        from coco import COCO
+        from pycocotools.coco import COCO
 
         self.coco = COCO(annFile)
         self.ids = list(sorted(self.coco.imgs.keys()))

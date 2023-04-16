@@ -55,18 +55,20 @@ def expand_to_planes(input, shape):
 
 
 class VaReSynth(nn.Module):
-    def __init__(self, hf_key=None):
+    def __init__(self, hf_key=None, sd_version='2.0'):
         super().__init__()
         c = 64  # The base channel count
+
+        self.device = torch.device('cuda')
 
         if hf_key is not None:
             print(f'[INFO] using hugging face custom model key: {hf_key}')
             model_key = hf_key
-        elif self.sd_version == '2.1':
+        elif sd_version == '2.1':
             model_key = "stabilityai/stable-diffusion-2-1-base"
-        elif self.sd_version == '2.0':
+        elif sd_version == '2.0':
             model_key = "stabilityai/stable-diffusion-2-base"
-        elif self.sd_version == '1.5':
+        elif sd_version == '1.5':
             model_key = "runwayml/stable-diffusion-v1-5"
         else:
             raise ValueError(f'Stable-diffusion version {self.sd_version} not supported.')

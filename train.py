@@ -4,7 +4,7 @@ import torchvision.transforms as transforms
 from torch.utils import data
 from tqdm import tqdm
 
-from cocodata import VRSCocoCaptions
+from data.cocodata import VRSCocoCaptions
 from utils import get_alphas_sigmas, get_ddpm_schedule
 from model import VaReSynth
 from config import BATCH_SIZE, DEVICE, COCO_ANN_PTH, COCO_TRAIN_PTH
