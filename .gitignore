@@ -2,6 +2,6 @@ MultiDiffusion-master/*
 .*
 *.pyc
 *.out
-__pycache__
+*/__pycache__
 longleaf/*
 data/pycocotools/*

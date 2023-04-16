@@ -12,6 +12,7 @@ from config import BATCH_SIZE, DEVICE, COCO_ANN_PTH, COCO_TRAIN_PTH
 device = DEVICE
 
 def eval_loss(model, rng, reals, classes, pos):
+    # See: https://github.com/huggingface/diffusers/blob/main/examples/text_to_image/train_text_to_image.py#L792
     # Draw uniformly distributed continuous timesteps
     t = rng.draw(reals.shape[0])[:, 0].to(device)
 
@@ -23,14 +24,15 @@ def eval_loss(model, rng, reals, classes, pos):
     # Combine the ground truth images and the noise
     alphas = alphas[:, None, None, None]
     sigmas = sigmas[:, None, None, None]
-    latents = model.encode_image(reals)
+    latents = model.encode_image(reals).latent_dist.sample() * model.vae.config.scaling_factor
+
     noise = torch.randn_like(latents)
     noised_latents = latents * alphas + noise * sigmas
     targets = noise * alphas - latents * sigmas
 
     # Compute the model output and the loss.
     with torch.cuda.amp.autocast():
-        v = model(noised_latents, log_snrs, classes, pos)
+        v = model(noised_latents, log_snrs, classes, pos).sample
         return (v - targets).pow(2).mean([1, 2, 3]).mul(weights).mean()
 
 

@@ -58,8 +58,9 @@ class VRSCoco(VisionDataset):
 
         # Random rescaling
         min_side = min(image_width, image_height)
+        downscale_factor = 1.
         if min_side > 512:
-            downscale_factor = min_side / randint(512, min_side)
+            downscale_factor = randint(512, min_side) / min_side
         image_width /= downscale_factor
         image_height /= downscale_factor
         image = image.resize((image_width, image_height))
