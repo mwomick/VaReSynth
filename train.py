@@ -7,7 +7,7 @@ from tqdm import tqdm
 from coco import VRSCocoCaptions
 from utils import get_alphas_sigmas, get_ddpm_schedule
 from model import VaReSynth
-from config import BATCH_SIZE, DEVICE
+from config import BATCH_SIZE, DEVICE, COCO_ANN_PTH, COCO_TRAIN_PTH
 
 device = DEVICE
 
@@ -40,8 +40,8 @@ def train(model, opt, scaler, rng, epoch):
         transforms.Normalize([0.5], [0.5]),
     ])
 
-    train_set = VRSCocoCaptions(root = '/pine/scr/m/w/rwomick/train2017',
-                        annFile = '/pine/scr/m/w/rwomick/annotations/captions_train2017.json',
+    train_set = VRSCocoCaptions(root = COCO_TRAIN_PTH,
+                        annFile = COCO_ANN_PTH,
                         transform=tf)
 
     train_dl = data.DataLoader(train_set, BATCH_SIZE, shuffle=True, num_workers=4, persistent_workers=True, pin_memory=True)

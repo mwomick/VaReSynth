@@ -6,7 +6,6 @@ from diffusers import AutoencoderKL
 from transformers import CLIPTextModel, CLIPTokenizer
 
 # Define the model (a residual U-Net)
-
 class ResidualBlock(nn.Module):
     def __init__(self, main, skip=None):
         super().__init__()
