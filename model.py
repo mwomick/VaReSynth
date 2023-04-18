@@ -28,7 +28,7 @@ class VaReSynth(nn.Module):
         elif sd_version == '1.5':
             model_key = "runwayml/stable-diffusion-v1-5"
         else:
-            raise ValueError(f'Stable-diffusion version {self.sd_version} not supported.')
+            raise ValueError(f'Stable-diffusion version {sd_version} not supported.')
 
         # Create model
         self.vae = AutoencoderKL.from_pretrained(model_key, subfolder="vae").to(self.bg_device)
@@ -70,6 +70,5 @@ class VaReSynth(nn.Module):
 
 
     def forward(self, latents, log_snrs, raw_prompts, pos):
-        # timestep_embed = expand_to_planes(self.timestep_embed(log_snrs[:, None]), latents.shape)
         text_cond = self.get_text_embeds(raw_prompts)
         return self.unet(latents, log_snrs, text_cond, pos)

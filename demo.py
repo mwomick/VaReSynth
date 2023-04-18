@@ -8,7 +8,7 @@ from data.drawbench import get_rand_drawbench_prompts
 from config import DEVICE, STEPS
 
 def get_simple_pos(num):
-    simple_square = torch.tensor([0, 0, 512, 512])
+    simple_square = torch.tensor([0, 0, 1/512, 1/512])
     return simple_square.repeat(num)
 
 @torch.no_grad()

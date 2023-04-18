@@ -87,7 +87,7 @@ if __name__ == "__main__":
     print('Using device:', device)
     torch.manual_seed(0)
 
-    model = VaReSynth().to(device)
+    model = VaReSynth()
     # model_ema = deepcopy(model)
     print('Model parameters:', sum(p.numel() for p in model.parameters()))
 
