@@ -70,7 +70,7 @@ def train(model, opt, scaler, rng, epoch):
 def save(model, opt, scaler, epoch):
     filename = 'varesynth_coco_' + str(epoch) + '.pth'
     obj = {
-        'model': model.state_dict(),
+        'model': model.unet.state_dict(),
         # 'model_ema': model_ema.state_dict(),
         'opt': opt.state_dict(),
         'scaler': scaler.state_dict(),

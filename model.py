@@ -1,11 +1,9 @@
 import torch
 import torch.nn as nn
-import math
-from typing import Optional
 from diffusers import AutoencoderKL
-from unet import SpatialDiffusionUNet
-
 from transformers import CLIPTextModel, CLIPTokenizer
+
+from unet import SpatialDiffusionUNet
 
 
 class VaReSynth(nn.Module):
@@ -44,6 +42,7 @@ class VaReSynth(nn.Module):
                                          block_out_channels=(320, 640, 1280, 1280),
                                          cross_attention_dim=1024,
                                          attention_head_dim=[5, 10, 20, 20],
+                                         time_embedding_type="fourier",
                                          )
         
 
