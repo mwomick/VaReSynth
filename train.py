@@ -81,7 +81,7 @@ def save(model, opt, scaler, epoch):
 
 from demo import demo
 
-if __name__ == "__main__":
+def run():
     # Create the model and optimizer
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print('Using device:', device)
@@ -105,3 +105,6 @@ if __name__ == "__main__":
         epoch += 1
         if epoch % 5 == 0:
             demo(model, epoch)
+
+if __name__ == "__main__":
+    run()
