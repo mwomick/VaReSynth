@@ -21,12 +21,12 @@ def eval_loss(model, rng, reals, classes, pos):
     weights = log_snrs.exp() / log_snrs.exp().add(1)
 
     # Combine the ground truth images and the noise
-    alphas = alphas[:, None, None, None]
-    sigmas = sigmas[:, None, None, None]
+    alphas = alphas[:, None, None, None].to(model.main_device)
+    sigmas = sigmas[:, None, None, None].to(model.main_device)
     latents = model.encode_image(reals.to(model.bg_device)).sample() * model.vae.config.scaling_factor
     latents.to(model.main_device)
 
-    noise = torch.randn_like(latents)
+    noise = torch.randn_like(latents).to(model.main_device)
     noised_latents = latents * alphas + noise * sigmas
     targets = noise * alphas - latents * sigmas
 
