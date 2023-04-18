@@ -25,7 +25,7 @@ def eval_loss(model, rng, reals, classes, pos):
     sigmas = sigmas[:, None, None, None]
     latents = model.encode_image(reals.to(model.bg_device)).sample() * model.vae.config.scaling_factor
     latents.to(model.main_device)
-    
+
     noise = torch.randn_like(latents)
     noised_latents = latents * alphas + noise * sigmas
     targets = noise * alphas - latents * sigmas
@@ -50,7 +50,7 @@ def train(model, opt, scaler, rng, epoch):
     
     for i, (reals, classes, pos) in enumerate(tqdm(train_dl)):
         opt.zero_grad()
-        reals = reals.to(model.main_device)
+        # reals = reals
         # classes = classes.to(device)
         pos = pos.to(model.main_device)
 
