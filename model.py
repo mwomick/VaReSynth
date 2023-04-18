@@ -11,7 +11,7 @@ class VaReSynth(nn.Module):
         super().__init__()
 
         self.main_device = torch.device('cuda:0')
-        if torch.device('cuda:1'):
+        if torch.device_count() > 1:
             self.bg_device = torch.device('cuda:1')
         else:
             self.bg_device = self.main_device
@@ -69,5 +69,5 @@ class VaReSynth(nn.Module):
 
 
     def forward(self, latents, log_snrs, raw_prompts, pos):
-        text_cond = self.get_text_embeds(raw_prompts)
+        text_cond = self.get_text_embeds(raw_prompts).to(self.main_device)
         return self.unet(latents, log_snrs, text_cond, pos)
