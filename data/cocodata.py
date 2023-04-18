@@ -2,7 +2,6 @@ import os.path
 from typing import Any, Callable, List, Optional, Tuple
 
 from PIL import Image
-from PIL.Image import LANCZOS
 from random import randint
 
 import torch
@@ -67,7 +66,7 @@ class VRSCoco(VisionDataset):
         downscale_factor = randint(512, min_side) / min_side
         image_width = int(image_width * downscale_factor)
         image_height = int(image_height * downscale_factor)
-        image = image.resize((image_width, image_height), resample=LANCZOS)
+        image = image.resize((image_width, image_height), resample=Image.LANCZOS)
         
         assert(image.width >= 512 and image.height >= 512)
         
