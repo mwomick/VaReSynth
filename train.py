@@ -7,14 +7,13 @@ from tqdm import tqdm
 from data.cocodata import VRSCocoCaptions
 from utils import get_alphas_sigmas, get_ddpm_schedule
 from model import VaReSynth
-from config import BATCH_SIZE, DEVICE, COCO_ANN_PTH, COCO_TRAIN_PTH
+from config import BATCH_SIZE, COCO_ANN_PTH, COCO_TRAIN_PTH
 
-device = DEVICE
 
 def eval_loss(model, rng, reals, classes, pos):
     # See: https://github.com/huggingface/diffusers/blob/main/examples/text_to_image/train_text_to_image.py#L792
     # Draw uniformly distributed continuous timesteps
-    t = rng.draw(reals.shape[0])[:, 0].to(device)
+    t = rng.draw(reals.shape[0])[:, 0].to(model.main_device)
 
     # Calculate the noise schedule parameters for those timesteps
     log_snrs = get_ddpm_schedule(t)
@@ -50,9 +49,9 @@ def train(model, opt, scaler, rng, epoch):
     
     for i, (reals, classes, pos) in enumerate(tqdm(train_dl)):
         opt.zero_grad()
-        reals = reals.to(device)
+        reals = reals.to(model.main_device)
         # classes = classes.to(device)
-        pos = pos.to(device)
+        pos = pos.to(model.main_device)
 
         # Evaluate the loss
         loss = eval_loss(model, rng, reals, classes, pos)
@@ -83,8 +82,8 @@ from demo import demo
 
 def run():
     # Create the model and optimizer
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    print('Using device:', device)
+    # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    # print('Using device:', device)
     torch.manual_seed(0)
 
     model = VaReSynth()
