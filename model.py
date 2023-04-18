@@ -11,7 +11,7 @@ class VaReSynth(nn.Module):
         super().__init__()
 
         self.main_device = torch.device('cuda:0')
-        if torch.device_count() > 1:
+        if torch.cuda.device_count() > 1:
             self.bg_device = torch.device('cuda:1')
         else:
             self.bg_device = self.main_device
