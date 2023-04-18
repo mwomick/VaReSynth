@@ -24,7 +24,7 @@ def eval_loss(model, rng, reals, classes, pos):
     # Combine the ground truth images and the noise
     alphas = alphas[:, None, None, None]
     sigmas = sigmas[:, None, None, None]
-    latents = model.encode_image(reals).latent_dist.sample() * model.vae.config.scaling_factor
+    latents = model.encode_image(reals).sample() * model.vae.config.scaling_factor
 
     noise = torch.randn_like(latents)
     noised_latents = latents * alphas + noise * sigmas
@@ -51,7 +51,7 @@ def train(model, opt, scaler, rng, epoch):
     for i, (reals, classes, pos) in enumerate(tqdm(train_dl)):
         opt.zero_grad()
         reals = reals.to(device)
-        classes = classes.to(device)
+        # classes = classes.to(device)
         pos = pos.to(device)
 
         # Evaluate the loss

@@ -16,7 +16,7 @@
 #SBATCH --mem=16G
 #SBATCH --time=00-01:00:00
 #SBATCH --partition=volta-gpu
-#SBATCH --gres=gpu:1
+#SBATCH --gres=gpu:2
 #SBATCH --qos=gpu_access
 
 unset OMP_NUM_THREADS

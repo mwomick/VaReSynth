@@ -7,7 +7,7 @@ from random import randint
 import torch
 from torchvision.transforms.functional import crop
 from torchvision.datasets import VisionDataset
-
+import random
 
 class VRSCoco(VisionDataset):
     """`MS Coco Detection <https://cocodataset.org/#detection-2016>`_ Dataset.
@@ -37,7 +37,12 @@ class VRSCoco(VisionDataset):
         from pycocotools.coco import COCO
 
         self.coco = COCO(annFile)
-        self.ids = list(sorted(self.coco.imgs.keys()))
+        
+        # filter out lowres images
+        ids = list(sorted(self.coco.imgs.keys()))
+        values = [ self.coco.imgs[key] for key in ids ]
+        self.ids = [ ids[i] for i in range(len(values)) if min(values[i]['width'], values[i]['height']) >= 512]
+
         self.target_dim_x = target_dim_x
         self.target_dim_y = target_dim_y
 
@@ -58,18 +63,17 @@ class VRSCoco(VisionDataset):
 
         # Random rescaling
         min_side = min(image_width, image_height)
-        downscale_factor = 1.
-        if min_side > 512:
-            downscale_factor = randint(512, min_side) / min_side
-        image_width /= downscale_factor
-        image_height /= downscale_factor
+        downscale_factor = randint(512, min_side) / min_side
+        image_width = int(image_width * downscale_factor)
+        image_height = int(image_height * downscale_factor)
         image = image.resize((image_width, image_height))
+        
         assert(image.width >= 512 and image.height >= 512)
         
         left_x = randint(0, image_width-self.target_dim_x)
         left_y = randint(0, image_height-self.target_dim_y)
 
-        cropped_image = crop(image, left_x, left_y, left_x+self.target_dim_x, left_y+self.target_dim_y)
+        cropped_image = crop(image, left_x, left_y, self.target_dim_x, self.target_dim_y)
         x = left_x / image_width
         y = left_y / image_height
         res_x = 1 / image_width
@@ -120,4 +124,4 @@ class VRSCocoCaptions(VRSCoco):
     """
 
     def _load_target(self, id: int) -> List[str]:
-        return [ann["caption"] for ann in super()._load_target(id)]
+        return random.choice([ann["caption"] for ann in super()._load_target(id)])
