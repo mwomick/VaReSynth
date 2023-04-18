@@ -91,7 +91,7 @@ if __name__ == "__main__":
     # model_ema = deepcopy(model)
     print('Model parameters:', sum(p.numel() for p in model.parameters()))
 
-    opt = optim.Adam(model.parameters(), lr=2e-4)
+    opt = optim.Adam(model.unet.parameters(), lr=2e-4)
     scaler = torch.cuda.amp.GradScaler()
 
     # Use a low discrepancy quasi-random sequence to sample uniformly distributed
