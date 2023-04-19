@@ -1,4 +1,4 @@
-BATCH_SIZE = 16
+BATCH_SIZE = 1
 STEPS = 500
 
 import torch

@@ -24,7 +24,7 @@ def eval_loss(model, rng, reals, classes, pos):
     alphas = alphas[:, None, None, None].to(model.main_device)
     sigmas = sigmas[:, None, None, None].to(model.main_device)
     latents = model.encode_image(reals.to(model.bg_device)).sample() * model.vae.config.scaling_factor
-    latents.to(model.main_device)
+    latents = latents.to(model.main_device)
 
     noise = torch.randn_like(latents).to(model.main_device)
     noised_latents = latents * alphas + noise * sigmas
@@ -91,7 +91,7 @@ def run():
     # model_ema = deepcopy(model)
     print('Model parameters:', sum(p.numel() for p in model.parameters()))
 
-    opt = optim.Adam(model.unet.parameters(), lr=2e-4)
+    opt = optim.Adam(model.unet.parameters(), lr=2e-6)
     scaler = torch.cuda.amp.GradScaler()
 
     # Use a low discrepancy quasi-random sequence to sample uniformly distributed

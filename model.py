@@ -39,8 +39,10 @@ class VaReSynth(nn.Module):
         self.unet = SpatialDiffusionUNet(sample_size=64,
                                          in_channels=4,
                                          out_channels=4,
-                                         block_out_channels=(320, 640, 1280, 1280),
+                                         # block_out_channels=(320, 640, 1280, 1280),
+                                         block_out_channels=(240, 480, 960, 960),
                                          cross_attention_dim=1024,
+                                         norm_num_groups=24,    ## Edited bc of block_out_channels
                                          attention_head_dim=[5, 10, 20, 20],
                                          time_embedding_type="fourier",
                                          )
