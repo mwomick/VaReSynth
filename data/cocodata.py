@@ -64,17 +64,17 @@ class VRSCoco(VisionDataset):
         # Random rescaling
         min_side = min(image_width, image_height)
         downscale_factor = randint(512, min_side) / min_side
-        
+
         image_width = round(image_width * downscale_factor)
         image_height = round(image_height * downscale_factor)
 
         image = image.resize((image_width, image_height), resample=Image.LANCZOS)
         
-        assert(image.width >= 512 and image.height >= 512, "dim: [" + image.width + ", " + image.height + "]")
+        assert(image.width >= 512 and image.height >= 512, "dim: [" + str(image.width) + ", " + str(image.height) + "]")
         
         left_x = randint(0, image_width-self.target_dim_x)
         left_y = randint(0, image_height-self.target_dim_y)
-
+        
         cropped_image = crop(image, left_x, left_y, self.target_dim_x, self.target_dim_y)
         x = left_x / image_width
         y = left_y / image_height
