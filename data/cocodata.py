@@ -84,11 +84,11 @@ class VRSCoco(VisionDataset):
         image = self._load_image(id)
         target = self._load_target(id)
 
-        image, res = self._random_preprocess(image)
+        cropped_image, res = self._random_preprocess(image)
         if self.transforms is not None:
             cropped_image, target = self.transforms(cropped_image, target)
 
-        return image, target, res
+        return cropped_image, target, res
 
 
     def __len__(self) -> int:

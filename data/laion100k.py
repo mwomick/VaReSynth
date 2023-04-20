@@ -8,7 +8,14 @@ from torchvision.transforms.functional import crop
 
 class LAION100kDataset(Dataset):
     def __init__(self, annotations_file, img_dir, transform=None, target_transform=None):
-        self.json = json.loads(annotations_file)
+        self.ann_dict = {}
+        with open(annotations_file, 'rt') as anns_file:
+            lines = anns_file.readlines()
+            for i in range(1, lines):
+                filename = lines[i][:9]
+                caption = lines[i][11:]
+                self.ann_dict[filename] = caption
+
         self.img_dir = img_dir
         self.transform = transform
         self.target_transform = target_transform
@@ -47,7 +54,7 @@ class LAION100kDataset(Dataset):
         img_path = os.path.join(self.img_dir, key + ".jpg")
         image = Image.open(img_path)
         image, res = self._random_preprocess(image)
-        caption = self.json[key]
+        caption = self.ann_dict[key]
         if self.transform:
             image = self.transform(image)
         if self.target_transform:

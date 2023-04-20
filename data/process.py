@@ -12,7 +12,7 @@ MAX_FILES_TO_READ = 136
 FILES_TO_INCLUDE = 100000
 files_included = 0
 
-json_captions = { }
+json_captions = []
 
 for i in range(MAX_FILES_TO_READ):
 
@@ -42,7 +42,7 @@ for i in range(MAX_FILES_TO_READ):
                  continue
             new_element_filename = "{:09d}".format(files_included)
             image.save("/pine/scr/m/w/rwomick/laion-high-resolution/100k/" + new_element_filename +".jpg")
-            json_captions[new_element_filename] = caption
+            json_captions.append({new_element_filename: caption})
             files_included += 1
             if files_included >= FILES_TO_INCLUDE:
                 break
