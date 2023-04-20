@@ -53,11 +53,7 @@ class VRSCoco(VisionDataset):
     def _load_target(self, id: int) -> List[Any]:
         return self.coco.loadAnns(self.coco.getAnnIds(id))
 
-    def __getitem__(self, index: int) -> Tuple[Any, Any]:
-        id = self.ids[index]
-        image = self._load_image(id)
-        target = self._load_target(id)
-
+    def _random_preprocess(self, image):
         image_width = image.width
         image_height = image.height
 
@@ -75,18 +71,25 @@ class VRSCoco(VisionDataset):
         left_x = randint(0, image_width-self.target_dim_x)
         left_y = randint(0, image_height-self.target_dim_y)
         
-        cropped_image = crop(image, left_x, left_y, self.target_dim_x, self.target_dim_y)
         x = left_x / image_width
         y = left_y / image_height
         res_x = 1 / image_width
         res_y = 1 / image_height
 
+        return (crop(image, left_x, left_y, self.target_dim_x, self.target_dim_y), torch.tensor([x, y, res_x, res_y]))
+
+
+    def __getitem__(self, index: int) -> Tuple[Any, Any]:
+        id = self.ids[index]
+        image = self._load_image(id)
+        target = self._load_target(id)
+
+        image, res = self._random_preprocess(image)
         if self.transforms is not None:
             cropped_image, target = self.transforms(cropped_image, target)
 
-        pos = torch.tensor([x, y, res_x, res_y])
+        return image, target, res
 
-        return cropped_image, target, pos
 
     def __len__(self) -> int:
         return len(self.ids)
