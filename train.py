@@ -44,7 +44,7 @@ def init_log():
 
 def log(epoch, iteration, loss):
     with open("loss.csv", '+a') as log:
-        log.write(f'{epoch}, {iteration}, {loss.item():g}')
+        log.write(f'\n{epoch}, {iteration}, {loss.item():g}')
         log.close()
 
 
@@ -96,30 +96,39 @@ def save(model, opt, scaler, epoch):
 
 from demo import demo
 
-def run():
+def run(checkpoint=None):
     # Create the model and optimizer
-    # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    # print('Using device:', device)
     torch.manual_seed(0)
 
+    epoch = 0
+
     model = VaReSynth()
+
+    if checkpoint:
+        checkpoint = torch.load(checkpoint)
+        model.unet.load_state_dict(checkpoint['model'])
+        epoch = checkpoint['epoch']
+        scaler = torch.cuda.amp.GradScaler().load_state_dict(checkpoint['scaler'])
+        opt = optim.Adam(model.unet.parameters(), lr=1e-6).load_state_dict(checkpoint['opt'])
+        print("Loaded from checkpoint.")
     # model_ema = deepcopy(model)
-    print('Model parameters:', sum(p.numel() for p in model.parameters()))
+    else:
+        opt = optim.Adam(model.unet.parameters(), lr=1e-6)
+        scaler = torch.cuda.amp.GradScaler()
+        print("Initialized new model for training.")
 
-    opt = optim.Adam(model.unet.parameters(), lr=2e-6)
-    scaler = torch.cuda.amp.GradScaler()
-
+    # print('Model parameters:', sum(p.numel() for p in model.parameters()))
     # Use a low discrepancy quasi-random sequence to sample uniformly distributed
     # timesteps. This considerably reduces the between-batch variance of the loss.
     rng = torch.quasirandom.SobolEngine(1, scramble=True)
 
-    epoch = 0
+    demo(model, epoch)
     while True:
         train(model, opt, scaler, rng, epoch)
         save(model, opt, scaler, epoch)
         epoch += 1
-        if epoch % 5 == 0:
+        if epoch % 2 == 0:
             demo(model, epoch)
 
 if __name__ == "__main__":
-    run()
+    run(checkpoint="varesynth_coco_0.pth")

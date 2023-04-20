@@ -14,7 +14,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=16G
-#SBATCH --time=00-01:00:00
+#SBATCH --time=00-06:00:00
 #SBATCH --partition=volta-gpu
 #SBATCH --gres=gpu:2
 #SBATCH --qos=gpu_access
