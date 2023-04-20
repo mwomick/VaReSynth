@@ -7,3 +7,5 @@ longleaf/*
 data/pycocotools/*
 __pycache__
 *.pth
+demo_0*
+loss.csv

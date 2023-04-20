@@ -59,6 +59,7 @@ class VaReSynth(nn.Module):
     
     @torch.no_grad()
     def decode_latents(self, latents):
+        latents = latents.to(self.bg_device)
         latents = 1 / 0.18215 * latents
         imgs = self.vae.decode(latents).sample
         imgs = (imgs / 2 + 0.5).clamp(0, 1)

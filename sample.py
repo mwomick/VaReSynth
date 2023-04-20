@@ -17,7 +17,7 @@ def simple_sample(model, x, steps, eta, prompts, pos):
 
         # Get the model output (v, the predicted velocity)
         with torch.cuda.amp.autocast():
-            v = model(x, ts * log_snrs[i], prompts, pos).float()
+            v = model(x, ts * log_snrs[i], prompts, pos).sample
 
         # Predict the noise and the denoised image
         pred = x * alphas[i] - v * sigmas[i]

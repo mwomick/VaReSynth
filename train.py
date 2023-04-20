@@ -94,7 +94,7 @@ def save(model, opt, scaler, epoch):
     torch.save(obj, filename)
 
 
-from demo import demo
+from demo import single_demo
 
 def run(checkpoint=None):
     # Create the model and optimizer
@@ -122,13 +122,13 @@ def run(checkpoint=None):
     # timesteps. This considerably reduces the between-batch variance of the loss.
     rng = torch.quasirandom.SobolEngine(1, scramble=True)
 
-    demo(model, epoch)
+    # single_demo(model, epoch)
     while True:
         train(model, opt, scaler, rng, epoch)
         save(model, opt, scaler, epoch)
         epoch += 1
         if epoch % 2 == 0:
-            demo(model, epoch)
+            single_demo(model, epoch)
 
 if __name__ == "__main__":
-    run(checkpoint="varesynth_coco_0.pth")
+    run()
