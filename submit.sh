@@ -22,11 +22,9 @@
 unset OMP_NUM_THREADS
 
 # Set SIMG path
-# SIMG_PATH=/nas/longleaf/apps/pytorch_py3/1.9.1/simg 
 SIMG_PATH=/pine/scr/m/w/rwomick/Singularity
 
 # Set SIMG name
-# SIMG_NAME=pytorch1.9.1-py3-cuda11.1-ubuntu18.04.simg
 SIMG_NAME=huggingface.sif
 
 # Set data path
