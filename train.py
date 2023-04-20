@@ -128,7 +128,7 @@ def run(checkpoint=None):
         save(model, opt, scaler, epoch)
         epoch += 1
         if epoch % 2 == 0:
-            single_demo(model, epoch)
+            single_demo(model, epoch-1)
 
 if __name__ == "__main__":
     run()
