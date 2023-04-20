@@ -26,7 +26,7 @@ for i in range(MAX_FILES_TO_READ):
 
     to_include = []
     for index, row in table.to_pandas().iterrows():
-        if float(row['similarity']) > 0.10 and float(row['punsafe']) < 0.15 and row['LANGUAGE'] == 'en':
+        if float(row['similarity']) > 0.10 and float(row['punsafe']) < 0.33 and row['LANGUAGE'] == 'en':
             to_include.append(index)
 
     for j in to_include:
@@ -55,3 +55,5 @@ for i in range(MAX_FILES_TO_READ):
 with open("/pine/scr/m/w/rwomick/laion-high-resolution/100k/captions.json", "w") as capfile:
     json.dump(json_captions, capfile)
 
+# TODO: Make more repeatable (e.g. create a file specifying the original URLs of the images)
+# TODO: Test how 0.33 filtering works for filtering more rigorously against unsafe content (compare with original 0.15)
