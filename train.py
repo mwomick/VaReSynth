@@ -36,6 +36,18 @@ def eval_loss(model, rng, reals, classes, pos):
         return (v - targets).pow(2).mean([1, 2, 3]).mul(weights).mean()
 
 
+def init_log():
+    with open("loss.csv", '+a') as log:
+        log.write("Epoch, Iteration, Loss")
+        log.close()
+
+
+def log(epoch, iteration, loss):
+    with open("loss.csv", '+a') as log:
+        log.write(f'{epoch}, {iteration}, {loss.item():g}')
+        log.close()
+
+
 def train(model, opt, scaler, rng, epoch):
     tf = transforms.Compose([
         transforms.ToTensor(),
@@ -48,6 +60,8 @@ def train(model, opt, scaler, rng, epoch):
 
     train_dl = data.DataLoader(train_set, BATCH_SIZE, shuffle=True, num_workers=4, persistent_workers=True, pin_memory=True)
     
+    init_log()
+
     for i, (reals, classes, pos) in enumerate(tqdm(train_dl)):
         opt.zero_grad()
         # reals = reals
@@ -64,7 +78,8 @@ def train(model, opt, scaler, rng, epoch):
         scaler.update()
 
         if i % 50 == 0:
-            tqdm.write(f'Epoch: {epoch}, iteration: {i}, loss: {loss.item():g}')
+            log(epoch, i, loss)
+            # tqdm.write(f'Epoch: {epoch}, iteration: {i}, loss: {loss.item():g}')
 
 
 def save(model, opt, scaler, epoch):

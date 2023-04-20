@@ -70,7 +70,7 @@ class VRSCoco(VisionDataset):
 
         image = image.resize((image_width, image_height), resample=Image.LANCZOS)
         
-        assert(image.width >= 512 and image.height >= 512, "dim: [" + str(image.width) + ", " + str(image.height) + "]")
+        assert image.width >= 512 and image.height >= 512, "dim: [" + str(image.width) + ", " + str(image.height) + "]"
         
         left_x = randint(0, image_width-self.target_dim_x)
         left_y = randint(0, image_height-self.target_dim_y)

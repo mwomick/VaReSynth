@@ -6,3 +6,4 @@ MultiDiffusion-master/*
 longleaf/*
 data/pycocotools/*
 __pycache__
+*.pth
