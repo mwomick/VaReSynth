@@ -37,6 +37,9 @@ for i in range(MAX_FILES_TO_READ):
                 # double check language is English, if not, continue
                  continue
             image = Image.open(tar.extractfile(data_element_filename + '.jpg'))
+            if not (image.width >= 1024 and image.height >= 1024):
+                # check for corrupted images (all images should satisfy this condition)
+                 continue
             new_element_filename = "{:09d}".format(files_included)
             image.save("/pine/scr/m/w/rwomick/laion-high-resolution/100k/" + new_element_filename +".jpg")
             json_captions[new_element_filename] = caption
