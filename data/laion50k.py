@@ -6,7 +6,7 @@ from PIL import Image
 import torch
 from torchvision.transforms.functional import crop
 
-class LAION100kDataset(Dataset):
+class LAION50kDataset(Dataset):
     def __init__(self, annotations_file, img_dir, transform=None, target_transform=None):
         self.ann_dict = {}
         with open(annotations_file, 'rt') as anns_file:

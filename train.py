@@ -4,7 +4,8 @@ import torchvision.transforms as transforms
 from torch.utils import data
 from tqdm import tqdm
 
-from data.cocodata import VRSCocoCaptions
+from data.concat import train_set, train_loader
+
 from utils import get_alphas_sigmas, get_ddpm_schedule
 from model import VaReSynth
 from config import BATCH_SIZE, COCO_ANN_PTH, COCO_TRAIN_PTH
@@ -54,13 +55,8 @@ def train(model, opt, scaler, rng, epoch):
         transforms.Normalize([0.5], [0.5]),
     ])
 
-    train_set = VRSCocoCaptions(root = COCO_TRAIN_PTH,
-                        annFile = COCO_ANN_PTH,
-                        transform=tf)
-
-    train_dl = data.DataLoader(train_set, BATCH_SIZE, shuffle=True, num_workers=4, persistent_workers=True, pin_memory=True)
-    
-    init_log()
+    train_set = train_set
+    train_dl = train_loader
 
     for i, (reals, classes, pos) in enumerate(tqdm(train_dl)):
         opt.zero_grad()
@@ -113,6 +109,7 @@ def run(checkpoint=None):
         print("Loaded from checkpoint.")
     # model_ema = deepcopy(model)
     else:
+        init_log()
         opt = optim.Adam(model.unet.parameters(), lr=1e-6)
         scaler = torch.cuda.amp.GradScaler()
         print("Initialized new model for training.")
