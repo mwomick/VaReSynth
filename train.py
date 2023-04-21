@@ -38,13 +38,13 @@ def eval_loss(model, rng, reals, classes, pos):
 
 
 def init_log():
-    with open("loss.csv", '+a') as log:
+    with open("out/loss.csv", '+a') as log:
         log.write("Epoch, Iteration, Loss")
         log.close()
 
 
 def log(epoch, iteration, loss):
-    with open("loss.csv", '+a') as log:
+    with open("out/loss.csv", '+a') as log:
         log.write(f'\n{epoch}, {iteration}, {loss.item():g}')
         log.close()
 
@@ -81,7 +81,7 @@ def train(model, opt, scaler, rng, epoch):
 
 
 def save(model, opt, scaler, epoch):
-    filename = 'varesynth_coco_' + str(epoch) + '.pth'
+    filename = 'out/varesynth_coco_' + str(epoch) + '.pth'
     obj = {
         'model': model.unet.state_dict(),
         # 'model_ema': model_ema.state_dict(),
