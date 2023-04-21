@@ -1,10 +1,9 @@
 import torch
 from torch import optim
-import torchvision.transforms as transforms
 from torch.utils import data
 from tqdm import tqdm
 
-from data.concat import train_set, train_loader
+from data.dataloader import TRAIN_LOADER
 
 from utils import get_alphas_sigmas, get_ddpm_schedule
 from model import VaReSynth
@@ -50,13 +49,7 @@ def log(epoch, iteration, loss):
 
 
 def train(model, opt, scaler, rng, epoch):
-    tf = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize([0.5], [0.5]),
-    ])
-
-    train_set = train_set
-    train_dl = train_loader
+    train_dl = TRAIN_LOADER
 
     for i, (reals, classes, pos) in enumerate(tqdm(train_dl)):
         # reals = reals
@@ -101,19 +94,18 @@ def run(checkpoint=None):
     epoch = 0
 
     model = VaReSynth()
+    opt = optim.Adam(model.unet.parameters(), lr=1e-6)
+    scaler = torch.cuda.amp.GradScaler()
 
     if checkpoint:
         checkpoint = torch.load(checkpoint)
         model.unet.load_state_dict(checkpoint['model'])
         epoch = checkpoint['epoch']
-        scaler = torch.cuda.amp.GradScaler().load_state_dict(checkpoint['scaler'])
-        opt = optim.Adam(model.unet.parameters(), lr=1e-6).load_state_dict(checkpoint['opt'])
+        scaler.load_state_dict(checkpoint['scaler'])
+        opt.load_state_dict(checkpoint['opt'])
         print("Loaded from checkpoint.")
-    # model_ema = deepcopy(model)
     else:
         init_log()
-        opt = optim.Adam(model.unet.parameters(), lr=1e-6)
-        scaler = torch.cuda.amp.GradScaler()
         print("Initialized new model for training.")
 
     # print('Model parameters:', sum(p.numel() for p in model.parameters()))
