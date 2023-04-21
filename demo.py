@@ -39,8 +39,8 @@ def single_demo(model, epoch, eta=1.):
     fake_pos = get_simple_pos(1).to(model.main_device)
     fake = simple_sample(model, noise, STEPS, eta, fake_classes, fake_pos)
     filename = f'demo_{epoch:05}'
-    TF.to_pil_image(fake[0]).save(filename+".png")
-    with open(filename + "_prompts.txt", "+a") as text_file:
+    TF.to_pil_image(fake[0]).save("out/"+filename+".png")
+    with open("out/" + filename + "_prompts.txt", "+a") as text_file:
         for prompt in fake_classes:
             text_file.write(prompt+"\n")
     tqdm.write('')
