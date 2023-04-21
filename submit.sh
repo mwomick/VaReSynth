@@ -18,7 +18,7 @@
 #SBATCH --partition=volta-gpu
 #SBATCH --gres=gpu:2
 #SBATCH --qos=gpu_access
-#SBATCH --output=./out/output.%j.out
+#SBATCH --output=./out/slurm-%j.out
 
 unset OMP_NUM_THREADS
 
