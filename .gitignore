@@ -1,11 +1,8 @@
 MultiDiffusion-master/*
 .*
 *.pyc
-*.out
 */__pycache__
 longleaf/*
 data/pycocotools/*
 __pycache__
-*.pth
-demo_0*
-loss.csv
+out/*
