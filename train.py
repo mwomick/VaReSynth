@@ -8,7 +8,7 @@ from data.concat import train_set, train_loader
 
 from utils import get_alphas_sigmas, get_ddpm_schedule
 from model import VaReSynth
-from config import BATCH_SIZE, COCO_ANN_PTH, COCO_TRAIN_PTH
+from config import BATCH_SIZE, COCO_ANN_PTH, COCO_TRAIN_PTH, ACCUMULATE_STEPS
 
 
 def eval_loss(model, rng, reals, classes, pos):
@@ -59,22 +59,24 @@ def train(model, opt, scaler, rng, epoch):
     train_dl = train_loader
 
     for i, (reals, classes, pos) in enumerate(tqdm(train_dl)):
-        opt.zero_grad()
         # reals = reals
         # classes = classes.to(device)
         pos = pos.to(model.main_device)
 
         # Evaluate the loss
-        loss = eval_loss(model, rng, reals, classes, pos)
+        loss = eval_loss(model, rng, reals, classes, pos) / ACCUMULATE_STEPS
 
         # Do the optimizer step and EMA update
         scaler.scale(loss).backward()
-        scaler.step(opt)
-        # ema_update(model, model_ema, 0.95 if epoch < 20 else ema_decay)
-        scaler.update()
+    
+        if (i+1) % ACCUMULATE_STEPS == 0:
+            opt.zero_grad()
+            scaler.step(opt)
+            # ema_update(model, model_ema, 0.95 if epoch < 20 else ema_decay)
+            scaler.update()
 
-        if i % 50 == 0:
-            log(epoch, i, loss)
+        if i % (50*ACCUMULATE_STEPS) == 0:
+            log(epoch, int(i/ACCUMULATE_STEPS), loss)
             # tqdm.write(f'Epoch: {epoch}, iteration: {i}, loss: {loss.item():g}')
 
 
