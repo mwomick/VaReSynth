@@ -6,12 +6,12 @@ from PIL import Image
 import torch
 from torchvision.transforms.functional import crop
 
-class LAION50kDataset(Dataset):
+class LAION22kDataset(Dataset):
     def __init__(self, annotations_file, img_dir, transform=None, target_transform=None):
         self.ann_dict = {}
         with open(annotations_file, 'rt') as anns_file:
             lines = anns_file.readlines()
-            for i in range(1, lines):
+            for i in range(1, len(lines)):
                 filename = lines[i][:9]
                 caption = lines[i][11:]
                 self.ann_dict[filename] = caption
@@ -21,7 +21,7 @@ class LAION50kDataset(Dataset):
         self.target_transform = target_transform
 
     def __len__(self):
-        return len(self.img_labels)
+        return len(list(self.ann_dict.keys()))
 
     def _random_preprocess(self, image):
         image_width = image.width
@@ -38,21 +38,21 @@ class LAION50kDataset(Dataset):
         
         assert image.width >= 512 and image.height >= 512, "dim: [" + str(image.width) + ", " + str(image.height) + "]"
         
-        left_x = randint(0, image_width-self.target_dim_x)
-        left_y = randint(0, image_height-self.target_dim_y)
+        left_x = randint(0, image_width-512)
+        left_y = randint(0, image_height-512)
         
         x = left_x / image_width
         y = left_y / image_height
         res_x = 1 / image_width
         res_y = 1 / image_height
 
-        return (crop(image, left_x, left_y, self.target_dim_x, self.target_dim_y), torch.tensor([x, y, res_x, res_y]))
+        return (crop(image, left_x, left_y, 512, 512), torch.tensor([x, y, res_x, res_y]))
 
 
     def __getitem__(self, idx):
         key = "{:09d}".format(idx)
         img_path = os.path.join(self.img_dir, key + ".jpg")
-        image = Image.open(img_path)
+        image = Image.open(img_path).convert("RGB")
         image, res = self._random_preprocess(image)
         caption = self.ann_dict[key]
         if self.transform:

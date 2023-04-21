@@ -9,7 +9,7 @@ from torchvision.transforms.functional import crop
 from torchvision.datasets import VisionDataset
 import random
 
-class VRSCoco(VisionDataset):
+class COCOHR(VisionDataset):
     """`MS Coco Detection <https://cocodataset.org/#detection-2016>`_ Dataset.
     It requires the `COCO API to be installed <https://github.com/pdollar/coco/tree/master/PythonAPI>`_.
     Args:
@@ -95,7 +95,7 @@ class VRSCoco(VisionDataset):
         return len(self.ids)
 
 
-class VRSCocoCaptions(VRSCoco):
+class COCOHRCaptions(COCOHR):
     """`MS Coco Captions <https://cocodataset.org/#captions-2015>`_ Dataset.
     It requires the `COCO API to be installed <https://github.com/pdollar/coco/tree/master/PythonAPI>`_.
     Args:

@@ -48,7 +48,10 @@ def log(epoch, iteration, loss):
         log.close()
 
 
-def train(model, opt, scaler, rng, epoch):
+def train_accumulate(model, opt, scaler, rng, epoch):
+    if ACCUMULATE_STEPS == 1:
+        return train(model, opt, scaler, rng, epoch)
+    
     train_dl = TRAIN_LOADER
 
     for i, (reals, classes, pos) in enumerate(tqdm(train_dl)):
@@ -73,8 +76,31 @@ def train(model, opt, scaler, rng, epoch):
             # tqdm.write(f'Epoch: {epoch}, iteration: {i}, loss: {loss.item():g}')
 
 
+def train(model, opt, scaler, rng, epoch):
+    train_dl = TRAIN_LOADER
+
+    for i, (reals, classes, pos) in enumerate(tqdm(train_dl)):
+        # reals = reals
+        # classes = classes.to(device)
+        pos = pos.to(model.main_device)
+        opt.zero_grad()
+
+        # Evaluate the loss
+        loss = eval_loss(model, rng, reals, classes, pos)
+
+        # Do the optimizer step and EMA update
+        scaler.scale(loss).backward()
+        scaler.step(opt)
+        # ema_update(model, model_ema, 0.95 if epoch < 20 else ema_decay)
+        scaler.update()
+
+        if i % 50 == 0:
+            log(epoch, int(i), loss)
+            # tqdm.write(f'Epoch: {epoch}, iteration: {i}, loss: {loss.item():g}')
+
+
 def save(model, opt, scaler, epoch):
-    filename = 'out/varesynth_coco_' + str(epoch) + '.pth'
+    filename = 'out/varesynth_coco+laion_' + str(epoch) + '.pth'
     obj = {
         'model': model.unet.state_dict(),
         # 'model_ema': model_ema.state_dict(),
@@ -115,11 +141,13 @@ def run(checkpoint=None):
 
     # single_demo(model, epoch)
     while True:
-        train(model, opt, scaler, rng, epoch)
+        train_accumulate(model, opt, scaler, rng, epoch)
+        # train(model, opt, scaler, rng, epoch)
         save(model, opt, scaler, epoch)
         epoch += 1
         if epoch % 2 == 0:
             single_demo(model, epoch-1)
 
 if __name__ == "__main__":
+    # run(checkpoint="out/varesynth_coco_6.pth")
     run()
