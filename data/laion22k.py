@@ -1,5 +1,5 @@
 import os
-import json
+from math import sqrt
 from torch.utils.data import Dataset
 from random import randint
 from PIL import Image
@@ -43,10 +43,9 @@ class LAION22kDataset(Dataset):
         
         x = left_x / image_width
         y = left_y / image_height
-        res_x = 1 / image_width
-        res_y = 1 / image_height
-
-        return (crop(image, left_x, left_y, 512, 512), torch.tensor([x, y, res_x, res_y]))
+        res_diag = 1/sqrt(image_height*image_height+image_width*image_width)
+        
+        return (crop(image, left_x, left_y, 512, 512), torch.tensor([x, y, res_diag]))
 
 
     def __getitem__(self, idx):

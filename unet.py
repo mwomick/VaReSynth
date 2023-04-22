@@ -5,7 +5,7 @@ from modules import FourierFeatures
 class SpatialDiffusionUNet(UNet2DConditionModel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, class_embeddings_concat=True, **kwargs)
-        self.pos_encoder = FourierFeatures(4, kwargs["block_out_channels"][0] * 2)
+        self.pos_encoder = FourierFeatures(3, kwargs["block_out_channels"][0] * 2)
         self.to(torch.device('cuda:0'))
 
     def forward(

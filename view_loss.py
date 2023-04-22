@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
-data = pd.read_csv("loss.csv")
+data = pd.read_csv("out/loss.csv")
 
 y = data.iloc[:,2].to_list()
 
