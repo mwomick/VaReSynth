@@ -3,8 +3,6 @@ from typing import Any, Callable, List, Optional, Tuple
 
 from PIL import Image
 from random import randint
-import math
-
 import torch
 from torchvision.transforms.functional import crop
 from torchvision.datasets import VisionDataset
@@ -74,10 +72,10 @@ class COCOHR(VisionDataset):
         
         x = left_x / image_width
         y = left_y / image_height
-        res_diag = 1 / math.sqrt(image_width*image_width + image_height*image_height)
+        per_pix_res = 1 / (image_width*image_height)
         # res_y = 1 / image_height
 
-        return (crop(image, left_x, left_y, self.target_dim_x, self.target_dim_y), torch.tensor([x, y, res_diag]))
+        return (crop(image, left_x, left_y, self.target_dim_x, self.target_dim_y), torch.tensor([x, y, per_pix_res]))
 
 
     def __getitem__(self, index: int) -> Tuple[Any, Any]:
